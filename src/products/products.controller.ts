@@ -33,16 +33,24 @@ export class ProductsController {
     enum: ['asc', 'desc'],
     description: 'asc - по возрастанию, desc - по убыванию',
   })
-  @ApiQuery({
-    name: 'search',
-    required: false,
-    description: 'Поиск по названию товара',
-  })
   async getAllProducts(
-    @Query('sort') sort: 'asc' | 'desc',
-    @Query('search') search?: string,
+    @Query()
+    query: {
+      sort?: 'asc' | 'desc';
+      search?: string;
+      category?: string;
+      page?: number;
+      pageSize?: number;
+    },
   ) {
-    return this.productsService.getAllProducts(sort, search);
+    const { sort = 'asc', search, category, page = 1, pageSize = 10 } = query;
+    return this.productsService.getAllProducts(
+      sort,
+      page,
+      pageSize,
+      search,
+      category,
+    );
   }
 
   @ApiOperation({
