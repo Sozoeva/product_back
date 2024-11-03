@@ -10,8 +10,8 @@ export class FavoritesService {
     private readonly favoriteRepository: Repository<Favorite>,
   ) {}
 
-  async getFavorites() {
-    return await this.favoriteRepository.find();
+  async getFavoritesWithProducts() {
+    return await this.favoriteRepository.find({ relations: ['product'] });
   }
 
   async addToFavorites(productId: number) {
@@ -29,9 +29,5 @@ export class FavoritesService {
   async removeFromFavorites(productId: number) {
     await this.favoriteRepository.delete({ productId });
     return { message: 'Товар удален из избранного' };
-  }
-
-  async getFavoritesWithProducts() {
-    return await this.favoriteRepository.find({ relations: ['product'] });
   }
 }

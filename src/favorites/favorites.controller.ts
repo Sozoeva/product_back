@@ -1,20 +1,22 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { ApiBody, ApiExcludeEndpoint, ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 
 @Controller('favorites')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  @Get('hidden')
-  @ApiExcludeEndpoint()
-  async getAllFavorites() {
-    return this.favoritesService.getFavorites();
+  @ApiOperation({
+    summary: 'Избранные товары',
+  })
+  @Get()
+  async getFavoritesWithProducts() {
+    return this.favoritesService.getFavoritesWithProducts();
   }
 
   @ApiOperation({
-    summary: 'Создание товаров',
+    summary: 'Добавление в избранное',
   })
   @Post()
   @ApiBody({ type: CreateFavoriteDto })
@@ -24,16 +26,11 @@ export class FavoritesController {
   }
 
   @ApiOperation({
-    summary: 'Удаление товаров',
+    summary: 'Удаление товаров из избранного',
   })
   @Delete(':id')
   async removeFromFavorites(@Param('id') productId: number) {
     this.favoritesService.removeFromFavorites(productId);
     return { message: 'Товар удален из избранного' };
-  }
-
-  @Get()
-  async getFavoritesWithProducts() {
-    return this.favoritesService.getFavoritesWithProducts();
   }
 }
