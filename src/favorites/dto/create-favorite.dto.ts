@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDecimal, IsString } from 'class-validator';
+import {
+  IsDecimal,
+  IsString,
+  IsNotEmpty,
+  ValidateNested,
+  IsNumber,
+} from 'class-validator';
 
 export class Rating {
   @ApiProperty({
@@ -20,7 +26,12 @@ export class CreateFavoriteDto {
   @ApiProperty({
     description: 'Название товара',
   })
+  @IsNumber()
+  @IsNotEmpty()
+  productId: number;
+
   @IsString()
+  @IsNotEmpty()
   title: string;
 
   @ApiProperty({
@@ -33,24 +44,28 @@ export class CreateFavoriteDto {
     description: 'Описание товара',
   })
   @IsString()
+  @IsNotEmpty()
   description: string;
 
   @ApiProperty({
     description: 'Категория товара',
   })
   @IsString()
+  @IsNotEmpty()
   category: string;
 
   @ApiProperty({
     description: 'Фото товара',
   })
   @IsString()
+  @IsNotEmpty()
   image: string;
 
   @ApiProperty({
     description: 'Рейтинг товара',
     type: Rating,
   })
+  @ValidateNested()
   @Type(() => Rating)
   rating: Rating;
 }

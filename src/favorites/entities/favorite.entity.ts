@@ -1,28 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from 'src/products/entities/product.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
-@Entity('products')
+@Entity('favorites')
 export class Favorite {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  productId: number;
 
-  @Column('decimal')
-  price: number;
-
-  @Column()
-  description: string;
-
-  @Column()
-  category: string;
-
-  @Column()
-  image: string;
-
-  @Column('json')
-  rating: {
-    rate: number;
-    count: number;
-  };
+  @ManyToOne(() => Product)
+  @JoinColumn({ name: 'productId' })
+  product: Product;
 }

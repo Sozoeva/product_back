@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Favorite } from './entities/favorite.entity';
@@ -14,18 +14,24 @@ export class FavoritesService {
     return await this.favoriteRepository.find();
   }
 
-  async addToFavorites(dto: Favorite) {
-    const favorite = this.favoriteRepository.create(dto);
+  async addToFavorites(productId: number) {
+    const existingFavorite = await this.favoriteRepository.findOne({
+      where: { productId },
+    });
+    if (existingFavorite) {
+      throw new Error('Товар уже добавлен в избранное');
+    }
+    const favorite = new Favorite();
+    favorite.productId = productId;
     return await this.favoriteRepository.save(favorite);
   }
 
   async removeFromFavorites(productId: number) {
-    const result = await this.favoriteRepository.delete(productId);
+    await this.favoriteRepository.delete({ productId });
+    return { message: 'Товар удален из избранного' };
+  }
 
-    if (result.affected === 0) {
-      throw new NotFoundException(`Продукт с ID ${productId} не найден`);
-    }
-
-    return { message: 'Продукт успешно удален из избранного' };
+  async getFavoritesWithProducts() {
+    return await this.favoriteRepository.find({ relations: ['product'] });
   }
 }
