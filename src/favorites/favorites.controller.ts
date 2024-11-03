@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
@@ -11,8 +19,16 @@ export class FavoritesController {
     summary: 'Избранные товары',
   })
   @Get()
-  async getFavoritesWithProducts() {
-    return this.favoritesService.getFavoritesWithProducts();
+  async getFavoritesWithProducts(
+    @Query()
+    query: {
+      page: number;
+      pageSize: number;
+    },
+  ) {
+    const { page = 1, pageSize = 10 } = query;
+
+    return this.favoritesService.getFavoritesWithProducts(page, pageSize);
   }
 
   @ApiOperation({

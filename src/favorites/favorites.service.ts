@@ -10,8 +10,19 @@ export class FavoritesService {
     private readonly favoriteRepository: Repository<Favorite>,
   ) {}
 
-  async getFavoritesWithProducts() {
-    return await this.favoriteRepository.find({ relations: ['product'] });
+  async getFavoritesWithProducts(page: number = 1, pageSize: number = 5) {
+    const [favorites, total] = await this.favoriteRepository.findAndCount({
+      relations: ['product'],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return {
+      favorites,
+      total,
+      page,
+      pageSize,
+    };
   }
 
   async addToFavorites(productId: number) {

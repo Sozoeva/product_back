@@ -33,14 +33,24 @@ export class ProductsController {
     enum: ['asc', 'desc'],
     description: 'asc - по возрастанию, desc - по убыванию',
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Поиск по названию товара',
+  })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    description: 'Фильтрация по категории товара',
+  })
   async getAllProducts(
     @Query()
     query: {
-      sort?: 'asc' | 'desc';
-      search?: string;
-      category?: string;
-      page?: number;
-      pageSize?: number;
+      sort: 'asc' | 'desc';
+      search: string;
+      category: string;
+      page: number;
+      pageSize: number;
     },
   ) {
     const { sort = 'asc', search, category, page = 1, pageSize = 10 } = query;

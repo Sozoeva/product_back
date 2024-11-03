@@ -15,8 +15,8 @@ export class ProductsService {
     sort: 'asc' | 'desc',
     page: number,
     pageSize: number,
-    search?: string,
-    category?: string,
+    search: string,
+    category: string,
   ) {
     const order: FindOptionsOrder<Product> = {
       price: sort,
@@ -43,6 +43,8 @@ export class ProductsService {
     return {
       products,
       total,
+      page,
+      pageSize,
     };
   }
 
